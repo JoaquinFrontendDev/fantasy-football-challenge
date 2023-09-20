@@ -22,9 +22,9 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
-            "outputPath": "dist/fantasy-football-challenge",
+            "outputPath": "dist/fantasy-football-challenge/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -104,6 +104,61 @@
             ],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/fantasy-football-challenge/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "fantasy-football-challenge:build:development",
+              "serverTarget": "fantasy-football-challenge:server:development"
+            },
+            "production": {
+              "browserTarget": "fantasy-football-challenge:build:production",
+              "serverTarget": "fantasy-football-challenge:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "fantasy-football-challenge:build:production",
+              "serverTarget": "fantasy-football-challenge:server:production"
+            },
+            "development": {
+              "browserTarget": "fantasy-football-challenge:build:development",
+              "serverTarget": "fantasy-football-challenge:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
